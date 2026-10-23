@@ -1,0 +1,140 @@
+
+
+package search;
+
+import model.Contact;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ContactSearch
+{
+    
+
+   
+    
+    //Starts from index 0 on the list and compares the contact's name to key
+    public static int linearSearchByName( List<Contact> contacts, String key )
+    {
+        for ( int i = 0; i < contacts.size(); i++ )
+        {
+            if ( contacts.get( i ).getName().equalsIgnoreCase( key ) )
+            {
+                
+                return i; // return index when the value is found
+            } 
+        } 
+
+        return -1; // -1 means the value was not found end the method
+    } 
+
+
+    //Checks if the index matches 
+    public static int recursiveLinearSearchByName(
+        List<Contact> contacts, String key, int index )
+    {
+        // base case  reached the end of the list without a match
+        if ( index == contacts.size() - 1 &&
+             !contacts.get( index ).getName().equalsIgnoreCase( key ) )
+        {
+            return -1;
+        } 
+
+        // base case found the match at this index
+        if ( contacts.get( index ).getName().equalsIgnoreCase( key ) )
+        {
+            return index;
+        }
+        else // check the next index
+        {
+            return recursiveLinearSearchByName( contacts, key, index + 1 );
+        } // 
+    } 
+
+
+    
+
+      // checks the middle of an already sorted list and compares its name to key
+    public static int binarySearchByName( List<Contact> contacts, String key )
+    {
+        int low = 0;
+        int high = contacts.size() - 1;
+
+        while ( low <= high )
+        {
+            int middle = ( low + high ) / 2;
+
+            System.out.println(
+                "Checking index " + middle
+                + " containing " + contacts.get( middle ).getName() );
+             //
+            int comparison =
+                contacts.get( middle ).getName().compareToIgnoreCase( key );
+
+            if ( comparison == 0 ) // Case 1: key found
+            {
+                System.out.println( "Binary Search Found!" );
+                return middle;
+            }
+            else if ( comparison < 0 ) // Case 2: key is further up the list
+            {
+                low = middle + 1;
+            }
+            else // Case 3: key is further down the list
+            {
+                high = middle - 1;
+            } 
+        } 
+
+        return -1; // not found
+    }
+    
+    // Time complexity: O(n), every contact must be inspected once.
+    public static List<Contact> searchByName( List<Contact> contacts, String query )
+    {
+        List<Contact> results = new ArrayList<>();
+        String key = query.toLowerCase().trim(); //converts querys to lower case and strips their trailling spaces
+
+        for ( Contact c : contacts )
+        {
+            if ( c.getName().toLowerCase().contains( key ) )
+            {
+                results.add( c );
+            } 
+        } 
+
+        return results;
+    } 
+
+    public static List<Contact> searchByPhone( List<Contact> contacts, String query )
+    {
+        List<Contact> results = new ArrayList<>();
+        String key = query.trim();
+
+        for ( Contact c : contacts )
+        {
+            if ( c.getPhone().contains( key ) )
+            {
+                results.add( c );
+            } 
+        } 
+
+        return results;
+    } 
+
+    public static List<Contact> searchByEmail( List<Contact> contacts, String query )
+    {
+        List<Contact> results = new ArrayList<>();
+        String key = query.toLowerCase().trim();
+
+        for ( Contact c : contacts )
+        {
+            if ( c.getEmail().toLowerCase().contains( key ) )
+            {
+                results.add( c );
+            } 
+        } 
+
+        return results;
+    } 
+
+} 
