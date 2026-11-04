@@ -47,6 +47,8 @@ public class LoginDetails extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Password");
 
+        Password.setText("jPasswordField1");
+
         jLabel4.setFont(new java.awt.Font("Calibri Light", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("WELCOME BACK  ");
