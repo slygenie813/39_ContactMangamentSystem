@@ -17,6 +17,12 @@ public class LoginDetails extends javax.swing.JFrame {
      */
     public LoginDetails() {
         initComponents();
+        
+        // Clear the default placeholder text
+        Password.setText("");
+        
+        // cherck box listener
+        checkbox1.addItemListener(evt -> checkbox1ItemStateChanged(evt));
     }
 
     /**
@@ -36,6 +42,7 @@ public class LoginDetails extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        checkbox1 = new java.awt.Checkbox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -70,6 +77,8 @@ public class LoginDetails extends javax.swing.JFrame {
             }
         });
 
+        checkbox1.setLabel("Show Password");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -88,8 +97,11 @@ public class LoginDetails extends javax.swing.JFrame {
                         .addGap(43, 43, 43)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(checkbox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(67, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(174, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,9 +122,11 @@ public class LoginDetails extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(userName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(checkbox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
@@ -139,16 +153,58 @@ public class LoginDetails extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        Homepage login = new Homepage();
-        login.setVisible(true);
+        String user = userName.getText().trim();
+    String pass = new String(Password.getPassword());
+    
+    if (user.isEmpty() || pass.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Please enter both your username and password.", "Validation Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // Check credentials against users.txt
+    boolean matched = false;
+    java.io.File file = new java.io.File("users.txt");
+    if (file.exists()) {
+        try (java.util.Scanner scanner = new java.util.Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] parts = line.split(",");
+                if (parts.length == 2 && parts[0].equals(user) && parts[1].equals(pass)) {
+                    matched = true;
+                    break;
+                }
+            }
+        } catch (java.io.FileNotFoundException e) {
+            // File doesn't exist yet
+        }
+    }
+    
+    if (!matched) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Invalid username or password. Please sign up first if you don't have an account.", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    // If matched, proceed to homepage
+    javax.swing.JOptionPane.showMessageDialog(this, "Login Successful!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    Homepage home = new Homepage();
+    home.setVisible(true);
+    this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         LoginPage log = new LoginPage();
         log.setVisible(true);
+        this.dispose(); // Close LoginDetails window and return to welcome page
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void checkbox1ItemStateChanged(java.awt.event.ItemEvent evt) {                                         
+        if (checkbox1.getState()) {
+            Password.setEchoChar((char) 0); // Show text (using your Password field name)
+        } else {
+            Password.setEchoChar('•'); // Hide text
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -178,6 +234,7 @@ public class LoginDetails extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPasswordField Password;
+    private java.awt.Checkbox checkbox1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;

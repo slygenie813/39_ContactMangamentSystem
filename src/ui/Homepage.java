@@ -17,6 +17,12 @@ public class Homepage extends javax.swing.JFrame {
      */
     public Homepage() {
         initComponents();
+        
+        //Automatically loads and sorts alphabetically on startup
+        loadAndSortContacts(); 
+        
+        // search button
+        jButton2.addActionListener(evt -> jButton2ActionPerformed(evt));
     }
 
     /**
@@ -273,7 +279,7 @@ public class Homepage extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        NewContact newContactWindow =new NewContact();
+        NewContact newContactWindow = new NewContact(this);
         newContactWindow.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -283,9 +289,94 @@ public class Homepage extends javax.swing.JFrame {
         edit.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    /*// Helper method 
+    private void loadAndSortContacts() {
+        // 1. Load contacts from contacts.dat
+        java.util.List<model.Contact> contacts = persistance.FileHandler.loadContacts();
+    
+        // 2. Sort them alphabetically by name using your group's built-in sorter
+        search.Contactsort.sortByName(contacts);
+    
+        // 3. Populate jList1 dynamically
+        javax.swing.DefaultListModel<String> listModel = new javax.swing.DefaultListModel<>();
+        for (model.Contact c : contacts) {
+            listModel.addElement(c.getName() + " | " + c.getPhone() + " | " + c.getEmail());
+        }
+         jList1.setModel(listModel);
+    }
+    
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        String query = jTextField1.getText().trim();
+        java.util.List<model.Contact> allContacts = persistance.FileHandler.loadContacts();
+        
+        // Use your group's substring search algorithm from search package
+        java.util.List<model.Contact> results = search.ContactSearch.searchByName(allContacts, query);
+        
+        // Update jList1 dynamically with search results
+        javax.swing.DefaultListModel<String> listModel = new javax.swing.DefaultListModel<>();
+        for (model.Contact c : results) {
+            listModel.addElement(c.getName() + " | " + c.getPhone() + " | " + c.getEmail());
+        }
+        jList1.setModel(listModel);
+    }
     /**
      * @param args the command line arguments
      */
+    
+        // Called by NewContact after a save, so this window shows the new contact
+    public void refreshContacts() {
+        jTextField1.setText(""); // clear the search box so nothing is filtered out
+        loadAndSortContacts();
+    }
+
+    // Shows all contacts, sorted A-Z by name
+    private void loadAndSortContacts() {
+        try {
+            showContacts(service.ContactManager.getInstance().viewAllContactsSorted());
+        } catch (persistance.PersistenceException e) {
+            showStorageError(e);
+        }
+    }
+
+    // Search button: matches names that contain the text typed in the box
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
+        String query = jTextField1.getText().trim();
+
+        try {
+            java.util.List<model.Contact> results =
+                service.ContactManager.getInstance().search(query);
+
+            search.Contactsort.sortByName(results);
+            showContacts(results);
+
+            if (results.isEmpty() && !query.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this,
+                    "No contacts match \"" + query + "\".",
+                    "No Results",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (persistance.PersistenceException e) {
+            showStorageError(e);
+        }
+    }
+
+    // Fills jList1 with one line per contact
+    private void showContacts(java.util.List<model.Contact> contacts) {
+        javax.swing.DefaultListModel<String> listModel = new javax.swing.DefaultListModel<>();
+        for (model.Contact c : contacts) {
+            listModel.addElement(c.getName() + " | " + c.getPhone() + " | " + c.getEmail());
+        }
+        jList1.setModel(listModel);
+    }
+
+    private void showStorageError(persistance.PersistenceException e) {
+        javax.swing.JOptionPane.showMessageDialog(this,
+            e.getMessage(),
+            "Storage Error",
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
+    
+    
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

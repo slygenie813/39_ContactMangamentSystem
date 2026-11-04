@@ -1,49 +1,59 @@
-
-
 package search;
 
 import model.Contact;
+import util.Validation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Fast exact lookup of a contact by phone number (HashMap, O(1) average).
+// Phone numbers are normalized, so "071 234 5678" finds "0712345678".
+// ContactManager keeps this index in sync when contacts are added or
+// removed. Methods are synchronized so the index can be shared safely.
 public class Contactindex
 {
     private final Map<String, Contact> phoneIndex = new HashMap<>();
 
     // Build (or rebuild) the index from the current contact list.
-    // O(n) -- must insert every contact once. Call this once after load.
-    public void rebuild( List<Contact> contacts )
+    // O(n) -- inserts every contact once. If two contacts share a phone
+    // number, the later one in the list wins.
+    public synchronized void rebuild( List<Contact> contacts )
     {
         phoneIndex.clear();
 
         for ( Contact c : contacts )
         {
-            phoneIndex.put( c.getPhone(), c ); // duplicate phone numbers overwrite, same as the map.put("Alice", 28) example
-        } 
-    } 
+            phoneIndex.put( Validation.normalizePhone( c.getPhone() ), c );
+        }
+    }
 
     // O(1) average case -- exact phone number lookup only.
-    public Contact findByExactPhone( String phone )
+    public synchronized Contact findByExactPhone( String phone )
     {
-        return phoneIndex.get( phone );
-    } 
+        return phoneIndex.get( Validation.normalizePhone( phone ) );
+    }
 
-    // Call from ContactManager.addContact() so the index stays in sync.
-    public void onAdd( Contact c )
+    public synchronized void onAdd( Contact c )
     {
-        phoneIndex.put( c.getPhone(), c ); // O(1)
-    } 
+        phoneIndex.put( Validation.normalizePhone( c.getPhone() ), c ); // O(1)
+    }
 
-    // Call from ContactManager.deleteContact() so the index stays in sync.
-    public void onRemove( Contact c )
+    // Only removes the entry if it really belongs to this contact, so
+    // removing one contact can never drop another contact's entry.
+    public synchronized void onRemove( Contact c )
     {
-        phoneIndex.remove( c.getPhone() ); // O(1)
-    } 
+        String key = Validation.normalizePhone( c.getPhone() );
+        Contact current = phoneIndex.get( key );
 
-    public int size()
+        if ( current != null && current.getId().equals( c.getId() ) )
+        {
+            phoneIndex.remove( key );
+        }
+    }
+
+    public synchronized int size()
     {
         return phoneIndex.size();
-    } 
+    }
 
-} 
+}

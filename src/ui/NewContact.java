@@ -11,6 +11,7 @@ package ui;
 public class NewContact extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(NewContact.class.getName());
+    private Homepage parent;
 
     /**
      * Creates new form NewContact
@@ -18,6 +19,13 @@ public class NewContact extends javax.swing.JFrame {
     public NewContact() {
         initComponents();
     }
+    
+    public NewContact(Homepage parent) {
+        this();
+        this.parent = parent;
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -106,44 +114,67 @@ public class NewContact extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-       // BACK BUTTON: Just return to Homepage without saving
+       /*// BACK BUTTON: Just return to Homepage without saving
         Homepage back = new Homepage();
         back.setVisible(true);
+        this.dispose();*/
+               // BACK BUTTON: close this window without saving
+        if (parent == null) {
+            new Homepage().setVisible(true); // opened on its own, so open the Homepage
+        }
         this.dispose();
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // SAVE BUTTON: Gather fields, validate, save via ContactManager, and return
+                // SAVE BUTTON: gather fields, validate, save through ContactManager, and return
         String firstName = jTextField1.getText().trim();
         String lastName = jTextField2.getText().trim();
         String phone = jTextField4.getText().trim();
         String email = jTextField3.getText().trim();
-        
+
         // Combine first and last name
         String fullName = firstName + (lastName.isEmpty() ? "" : " " + lastName);
-        
+
         try {
-            // Instantiate contact (triggers validation)
+            // 1. Create the contact (validates name, phone and email)
             model.Contact newContact = new model.Contact(fullName, phone, email);
-            
-            // Save via ContactManager & persist to contacts.dat
-            service.ContactManager manager = new service.ContactManager();
-            manager.addContact(newContact);
-            
-            javax.swing.JOptionPane.showMessageDialog(this, 
-                "Contact saved successfully!", 
-                "Success", 
+
+            // 2. ContactManager checks for duplicates and saves to disk
+            service.ContactManager.getInstance().addContact(newContact);
+
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Contact saved successfully!",
+                "Success",
                 javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            
-            Homepage homepage = new Homepage();
-            homepage.setVisible(true);
+
+            // 3. Show the new contact: refresh the Homepage that is already open
+            if (parent != null) {
+                parent.refreshContacts();
+            } else {
+                new Homepage().setVisible(true);
+            }
             this.dispose();
-            
+
+        } catch (service.DuplicateContactException e) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                e.getMessage(),
+                "Duplicate Contact",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+
+        } catch (persistance.PersistenceException e) {
+            // The contact was NOT saved; the file is unchanged.
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "The contact could not be saved.\n" + e.getMessage(),
+                "Storage Error",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+
         } catch (Exception e) {
-            javax.swing.JOptionPane.showMessageDialog(this, 
-                "Error: " + e.getMessage(), 
-                "Validation Error", 
+            // Invalid name / phone / email, or any other problem
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Error: " + e.getMessage(),
+                "Validation Error",
                 javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed

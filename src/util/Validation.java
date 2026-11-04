@@ -15,11 +15,22 @@ public class Validation {
 
     public static boolean isValidPhone(String phone) {
         if (phone == null) return false;
-        String normalized = phone.trim().replaceAll("[\\s()-]", "");
-        return PHONE_PATTERN.matcher(normalized).matches();
+        return PHONE_PATTERN.matcher(normalizePhone(phone)).matches();
     }
 
     public static boolean isNotEmpty(String value) {
         return value != null && !value.trim().isEmpty();
+    }
+
+    /**
+     * Strips spaces, brackets and hyphens so "071 234-5678" and
+     * "0712345678" compare as equal. A null phone becomes "".
+     * Used when storing, searching and indexing phone numbers.
+     */
+    public static String normalizePhone(String phone) {
+        if (phone == null) {
+            return "";
+        }
+        return phone.trim().replaceAll("[\\s()-]", "");
     }
 }
