@@ -16,6 +16,10 @@ public class ContactManagementSystem {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        // Launch your Swing UI Login Page as the starting point
+        java.awt.EventQueue.invokeLater(() -> {
+            new ui.LoginPage().setVisible(true);
+        });
     }
     
 }

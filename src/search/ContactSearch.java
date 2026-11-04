@@ -5,11 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactSearch
-{
-    
-
-   
-    
+{ 
     //Starts from index 0 on the list and compares the contact's name to key
     public static int linearSearchByName( List<Contact> contacts, String key )
     {
@@ -92,9 +88,9 @@ public class ContactSearch
         List<Contact> results = new ArrayList<>();
         String key = query.toLowerCase().trim(); //converts querys to lower case and strips their trailling spaces
 
-        for ( Contact c : contacts )// scans every contact 
+        for ( Contact c : contacts )
         {
-            if ( c.getName().toLowerCase().contains( key ) )//Lowercases each contacts name and checks if it contains key
+            if ( c.getName().toLowerCase().contains( key ) )
             {
                 results.add( c );
             } 
@@ -102,18 +98,17 @@ public class ContactSearch
 
         return results;
     } 
-// 
+
     public static List<Contact> searchByPhone( List<Contact> contacts, String query )
     {
-        List<Contact> results = new ArrayList<>();// creates an empty list which will collect contacts matching the query
-        
-        String key = query.trim();//Takes a query and creates a copy without leading and trailling white spaces
+        List<Contact> results = new ArrayList<>();
+        String key = query.trim();
 
-        for ( Contact c : contacts )//scans every contact 
+        for ( Contact c : contacts )
         {
-            if ( c.getPhone().contains( key ) )// check if the contacts phone number contains the search key
+            if ( c.getPhone().contains( key ) )
             {
-                results.add( c );//add the reuslt to the list 
+                results.add( c );
             } 
         } 
 
@@ -122,15 +117,14 @@ public class ContactSearch
 
     public static List<Contact> searchByEmail( List<Contact> contacts, String query )
     {
-        List<Contact> results = new ArrayList<>();;// creates an empty list which will collect contacts matching the query
-        
-        String key = query.toLowerCase().trim();//Takes a query and creates a copy without leading and trailling white spaces
+        List<Contact> results = new ArrayList<>();
+        String key = query.toLowerCase().trim();
 
-        for ( Contact c : contacts )//scans every contact 
+        for ( Contact c : contacts )
         {
-            if ( c.getEmail().toLowerCase().contains( key ) )// check if the contacts email contains the search key
+            if ( c.getEmail().toLowerCase().contains( key ) )
             {
-                results.add( c );//add the result to the list 
+                results.add( c );
             } 
         } 
 

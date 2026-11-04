@@ -106,15 +106,46 @@ public class NewContact extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+       // BACK BUTTON: Just return to Homepage without saving
         Homepage back = new Homepage();
         back.setVisible(true);
+        this.dispose();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        Homepage homepage = new Homepage();
-        homepage.setVisible(true);
-                
+        // SAVE BUTTON: Gather fields, validate, save via ContactManager, and return
+        String firstName = jTextField1.getText().trim();
+        String lastName = jTextField2.getText().trim();
+        String phone = jTextField4.getText().trim();
+        String email = jTextField3.getText().trim();
+        
+        // Combine first and last name
+        String fullName = firstName + (lastName.isEmpty() ? "" : " " + lastName);
+        
+        try {
+            // Instantiate contact (triggers validation)
+            model.Contact newContact = new model.Contact(fullName, phone, email);
+            
+            // Save via ContactManager & persist to contacts.dat
+            service.ContactManager manager = new service.ContactManager();
+            manager.addContact(newContact);
+            
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Contact saved successfully!", 
+                "Success", 
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            
+            Homepage homepage = new Homepage();
+            homepage.setVisible(true);
+            this.dispose();
+            
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Error: " + e.getMessage(), 
+                "Validation Error", 
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
