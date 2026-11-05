@@ -4,13 +4,19 @@ import model.Contact;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -19,21 +25,22 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Saves and loads the contact list.
+ * Saves and loads the contact list (and small text files such as the user
+ * accounts file).
  *
  * Guarantees:
  *  - A save never leaves a half-written file behind: data is written to a
  *    temporary file first and then moved over the real file.
  *  - Failures are reported with a PersistenceException; they are never
- *    swallowed.
+ *    swallowed. Permission and "file in use" problems get a clear message.
  *  - A file that exists but cannot be read is never treated as "no
  *    contacts". It is left untouched and an exception is thrown, so the
  *    next save cannot overwrite data that might still be recoverable.
  *  - Only the classes a contact list needs can be deserialized.
  *
- * The default file is "contacts.dat" in the working directory. Set the
- * system property "contacts.file" (e.g. -Dcontacts.file=C:/data/c.dat) to
- * use another location. The overloads taking a Path are mainly for tests.
+ * The default contacts file is "contacts.dat" in the working directory. Set
+ * the system property "contacts.file" (e.g. -Dcontacts.file=C:/data/c.dat)
+ * to use another location. The overloads taking a Path are mainly for tests.
  */
 public class FileHandler {
 
@@ -52,8 +59,14 @@ public class FileHandler {
         // static utility class
     }
 
+    /** Something that writes the contents of a file. */
+    @FunctionalInterface
+    private interface FileWriterAction {
+        void write(FileOutputStream out) throws IOException;
+    }
+
     // --------------------------------------------------
-    // Saving
+    // Contacts (serialized list)
     // --------------------------------------------------
 
     public static void saveContacts(List<Contact> contacts) {
@@ -62,6 +75,105 @@ public class FileHandler {
 
     public static void saveContacts(List<Contact> contacts, Path file) {
         Objects.requireNonNull(contacts, "contacts cannot be null");
+
+        writeAtomically(file, "contacts", out -> {
+            ObjectOutputStream oos =
+                    new ObjectOutputStream(new BufferedOutputStream(out));
+            // Always write a plain ArrayList so the file can be read back
+            // regardless of what List implementation was passed in.
+            oos.writeObject(new ArrayList<>(contacts));
+            oos.flush();
+        });
+    }
+
+    public static List<Contact> loadContacts() {
+        return loadContacts(DEFAULT_PATH);
+    }
+
+    public static List<Contact> loadContacts(Path file) {
+        Objects.requireNonNull(file, "file cannot be null");
+
+        try {
+            // First run: no file yet means no contacts yet.
+            if (!Files.exists(file) || Files.size(file) == 0) {
+                return new ArrayList<>();
+            }
+        } catch (IOException e) {
+            throw new PersistenceException(
+                    "Could not access " + file.toAbsolutePath() + ": "
+                    + describe(e), e);
+        }
+
+        try (ObjectInputStream ois = new ObjectInputStream(
+                new BufferedInputStream(Files.newInputStream(file)))) {
+
+            ois.setObjectInputFilter(FILTER);
+            Object data = ois.readObject();
+
+            if (!(data instanceof List<?> list)) {
+                throw unreadable(file, "it does not contain a contact list",
+                        null);
+            }
+
+            List<Contact> contacts = new ArrayList<>(list.size());
+            for (Object item : list) {
+                if (!(item instanceof Contact contact)) {
+                    throw unreadable(file, "it contains something that is "
+                            + "not a contact", null);
+                }
+                contacts.add(contact);
+            }
+            return contacts;
+
+        } catch (IOException e) {
+            throw unreadable(file, describe(e), e);
+        } catch (ClassNotFoundException e) {
+            throw unreadable(file, "unknown class " + e.getMessage(), e);
+        }
+    }
+
+    // --------------------------------------------------
+    // Plain text files (used for the user accounts file)
+    // --------------------------------------------------
+
+    /** Reads all lines (UTF-8). A missing file gives an empty list. */
+    public static List<String> readLines(Path file) {
+        Objects.requireNonNull(file, "file cannot be null");
+        try {
+            if (!Files.exists(file)) {
+                return new ArrayList<>();
+            }
+            return new ArrayList<>(
+                    Files.readAllLines(file, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            throw new PersistenceException(
+                    "Could not read " + file.toAbsolutePath() + ": "
+                    + describe(e), e);
+        }
+    }
+
+    /** Replaces the file with these lines, using the same safe write. */
+    public static void writeLinesAtomically(Path file, List<String> lines) {
+        Objects.requireNonNull(lines, "lines cannot be null");
+
+        writeAtomically(file, "data", out -> {
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(out, StandardCharsets.UTF_8));
+            for (String line : lines) {
+                writer.write(line);
+                writer.newLine();
+            }
+            writer.flush();
+        });
+    }
+
+    // --------------------------------------------------
+    // Helpers
+    // --------------------------------------------------
+
+    private static void writeAtomically(
+            Path file, String what, FileWriterAction action) {
+
         Objects.requireNonNull(file, "file cannot be null");
 
         Path target = file.toAbsolutePath();
@@ -73,14 +185,8 @@ public class FileHandler {
                     target.getFileName().toString(),
                     ".tmp");
 
-            try (FileOutputStream fos = new FileOutputStream(temp.toFile());
-                 ObjectOutputStream oos = new ObjectOutputStream(
-                         new BufferedOutputStream(fos))) {
-
-                // Always write a plain ArrayList so the file can be read
-                // back regardless of what List implementation was passed in.
-                oos.writeObject(new ArrayList<>(contacts));
-                oos.flush();
+            try (FileOutputStream fos = new FileOutputStream(temp.toFile())) {
+                action.write(fos);
                 fos.getFD().sync(); // make sure the bytes reached the disk
             }
 
@@ -89,8 +195,8 @@ public class FileHandler {
         } catch (IOException e) {
             deleteQuietly(temp);
             throw new PersistenceException(
-                    "Could not save contacts to " + target + ": "
-                    + e.getMessage(), e);
+                    "Could not save " + what + " to " + target + ": "
+                    + describe(e), e);
         }
     }
 
@@ -116,55 +222,20 @@ public class FileHandler {
         }
     }
 
-    // --------------------------------------------------
-    // Loading
-    // --------------------------------------------------
-
-    public static List<Contact> loadContacts() {
-        return loadContacts(DEFAULT_PATH);
-    }
-
-    public static List<Contact> loadContacts(Path file) {
-        Objects.requireNonNull(file, "file cannot be null");
-
-        try {
-            // First run: no file yet means no contacts yet.
-            if (!Files.exists(file) || Files.size(file) == 0) {
-                return new ArrayList<>();
-            }
-        } catch (IOException e) {
-            throw new PersistenceException(
-                    "Could not access " + file.toAbsolutePath() + ": "
-                    + e.getMessage(), e);
+    /** Turns an I/O error into a sentence a user can act on. */
+    private static String describe(IOException e) {
+        if (e instanceof AccessDeniedException) {
+            return "permission denied - the file or folder is read-only "
+                    + "or locked by another program";
         }
-
-        try (ObjectInputStream ois = new ObjectInputStream(
-                new BufferedInputStream(Files.newInputStream(file)))) {
-
-            ois.setObjectInputFilter(FILTER);
-            Object data = ois.readObject();
-
-            if (!(data instanceof List<?> list)) {
-                throw unreadable(file, "it does not contain a contact list");
-            }
-
-            List<Contact> contacts = new ArrayList<>(list.size());
-            for (Object item : list) {
-                if (!(item instanceof Contact contact)) {
-                    throw unreadable(file, "it contains something that is "
-                            + "not a contact");
-                }
-                contacts.add(contact);
-            }
-            return contacts;
-
-        } catch (IOException | ClassNotFoundException e) {
-            throw unreadable(file, e.getMessage(), e);
+        if (e instanceof NoSuchFileException) {
+            return "the folder does not exist";
         }
-    }
-
-    private static PersistenceException unreadable(Path file, String reason) {
-        return unreadable(file, reason, null);
+        if (e instanceof FileSystemException fse && fse.getReason() != null) {
+            return fse.getReason();
+        }
+        return e.getMessage() == null
+                ? e.getClass().getSimpleName() : e.getMessage();
     }
 
     private static PersistenceException unreadable(

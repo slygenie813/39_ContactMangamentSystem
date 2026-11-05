@@ -1,22 +1,26 @@
 package model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.regex.Pattern;
+import util.Validation;
 
 
 public class Contact implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // Validation patterns
-    private static final Pattern EMAIL_PATTERN =
-            Pattern.compile("^[\\w.+-]+@[\\w-]+(?:\\.[\\w-]+)*\\.[a-zA-Z]{2,}$");
+    // Ready-made orderings, used by the search/sort classes, the GUI and the CLI
+    public static final Comparator<Contact> BY_NAME =
+            Comparator.comparing(Contact::getName, String.CASE_INSENSITIVE_ORDER);
 
-    private static final Pattern PHONE_PATTERN =
-            Pattern.compile("^\\+?[0-9]{7,15}$");
+    public static final Comparator<Contact> BY_PHONE =
+            Comparator.comparing(Contact::getPhone);
+
+    public static final Comparator<Contact> BY_DATE_ADDED =
+            Comparator.comparing(Contact::getDateAdded);
 
     // Contact information
     private final String id;
@@ -100,10 +104,9 @@ public class Contact implements Serializable {
         }
 
         // Removes spaces, brackets and hyphens
-        String normalized = phoneNumber.trim()
-                .replaceAll("[\\s()-]", "");
+        String normalized = Validation.normalizePhone(phoneNumber);
 
-        if (!PHONE_PATTERN.matcher(normalized).matches()) {
+        if (!Validation.isValidPhone(normalized)) {
             throw new IllegalArgumentException(
                     "Invalid phone number. Enter 7-15 digits "
                     + "with an optional + at the beginning."
@@ -124,7 +127,7 @@ public class Contact implements Serializable {
         String normalized = email.trim()
                 .toLowerCase(Locale.ROOT);
 
-        if (!EMAIL_PATTERN.matcher(normalized).matches()) {
+        if (!Validation.isValidEmail(normalized)) {
             throw new IllegalArgumentException(
                     "Invalid email address."
             );
@@ -207,41 +210,34 @@ public class Contact implements Serializable {
     // --------------------------------------------------
 
     /**
-     * Checks whether two contacts have the same ID.
+     * Two contacts are the same contact when they have the same id. The id
+     * never changes, even when the name, phone or email is edited. Duplicate
+     * detection by phone or email is done by ContactManager.
      */
-    public boolean hasSameId(Contact other) {
-
-        if (other == null) {
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof Contact)) {
             return false;
         }
+        return id.equals(((Contact) other).id);
+    }
 
-        return this.id.equals(other.id);
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
     /**
-     * Returns a hash value based on the contact ID.
+     * Short text for logs and debugging, for example:
+     * Contact{name='Jane Doe', phone='0845678901', email='jane@example.com'}
      */
-    public int getContactHashCode() {
-        return Objects.hash(id);
-    }
-
-    /**
-     * Compares two contacts by name.
-     *
-     * Returns:
-     * negative number if this contact comes first
-     * zero if the names are equal
-     * positive number if the other contact comes first
-     */
-    public int compareNames(Contact other) {
-
-        if (other == null) {
-            throw new IllegalArgumentException(
-                    "Contact cannot be null."
-            );
-        }
-
-        return this.name.compareToIgnoreCase(other.name);
+    @Override
+    public String toString() {
+        return "Contact{name='" + name + "', phone='" + phoneNumber
+                + "', email='" + email + "'}";
     }
 
     /**
