@@ -31,9 +31,8 @@ public class Contact implements Serializable {
     private String email;
     private LocalDateTime lastModified;
 
-    /**
-     * Creates a new contact.
-     */
+    // Creates a new contact.
+     
     public Contact(String name, String phoneNumber, String email) {
 
         this.id = UUID.randomUUID().toString();
@@ -46,10 +45,8 @@ public class Contact implements Serializable {
         this.lastModified = this.dateAdded;
     }
 
-    /**
-     * Constructor used when loading an existing contact
-     * from a file.
-     */
+    //Constructor used when loading an existing contact from a file.
+     
     public Contact(String id, String name, String phoneNumber,
                    String email, LocalDateTime dateAdded,
                    LocalDateTime lastModified) {
@@ -68,11 +65,9 @@ public class Contact implements Serializable {
                 ? lastModified
                 : dateAdded;
     }
-
-    // --------------------------------------------------
+    
     // Validation methods
-    // --------------------------------------------------
-
+    
     private static String validateId(String id) {
 
         if (id == null || id.trim().isEmpty()) {
@@ -136,9 +131,9 @@ public class Contact implements Serializable {
         return normalized;
     }
 
-    // --------------------------------------------------
+    
     // Getters
-    // --------------------------------------------------
+    
 
     public String getId() {
         return id;
@@ -164,9 +159,9 @@ public class Contact implements Serializable {
         return lastModified;
     }
 
-    // --------------------------------------------------
+    
     // Setters
-    // --------------------------------------------------
+    
 
     public void setName(String name) {
 
@@ -198,16 +193,15 @@ public class Contact implements Serializable {
         }
     }
 
-    /**
-     * Updates the last modified date.
-     */
+    // Updates the last modified date.
+     
     private void updateLastModified() {
         this.lastModified = LocalDateTime.now();
     }
 
-    // --------------------------------------------------
+    
     // Contact methods
-    // --------------------------------------------------
+   
 
     /**
      * Two contacts are the same contact when they have the same id. The id
@@ -240,9 +234,8 @@ public class Contact implements Serializable {
                 + "', email='" + email + "'}";
     }
 
-    /**
-     * Returns the contact information as a String.
-     */
+    //Returns the contact information as a String.
+     
     public String getContactDetails() {
 
         return "ID: " + id
