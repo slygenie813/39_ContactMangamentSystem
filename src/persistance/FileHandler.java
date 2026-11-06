@@ -24,24 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Saves and loads the contact list (and small text files such as the user
- * accounts file).
- *
- * Guarantees:
- *  - A save never leaves a half-written file behind: data is written to a
- *    temporary file first and then moved over the real file.
- *  - Failures are reported with a PersistenceException; they are never
- *    swallowed. Permission and "file in use" problems get a clear message.
- *  - A file that exists but cannot be read is never treated as "no
- *    contacts". It is left untouched and an exception is thrown, so the
- *    next save cannot overwrite data that might still be recoverable.
- *  - Only the classes a contact list needs can be deserialized.
- *
- * The default contacts file is "contacts.dat" in the working directory. Set
- * the system property "contacts.file" (e.g. -Dcontacts.file=C:/data/c.dat)
- * to use another location. The overloads taking a Path are mainly for tests.
- */
+
 public class FileHandler {
 
     private static final Path DEFAULT_PATH =
@@ -131,12 +114,8 @@ public class FileHandler {
             throw unreadable(file, "unknown class " + e.getMessage(), e);
         }
     }
-
-    // --------------------------------------------------
-    // Plain text files (used for the user accounts file)
-    // --------------------------------------------------
-
-    /** Reads all lines (UTF-8). A missing file gives an empty list. */
+    
+    
     public static List<String> readLines(Path file) {
         Objects.requireNonNull(file, "file cannot be null");
         try {

@@ -125,11 +125,8 @@ public class Contactsort
             k++;
         } 
     } 
-
-
-   
-    // Java's Collections.sort (TimSort): O(n) best case, O(n log n) average
-    // and worst case. Sorts the list IN PLACE.
+    
+    
     public static void sortByName( List<Contact> contacts )
     {
         contacts.sort( Comparator.comparing( Contact::getName, String.CASE_INSENSITIVE_ORDER ) );

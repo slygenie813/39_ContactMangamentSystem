@@ -153,42 +153,34 @@ public class LoginDetails extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+                // LOGIN BUTTON: AuthService compares a salted hash, the password is never stored
         String user = userName.getText().trim();
-    String pass = new String(Password.getPassword());
-    
-    if (user.isEmpty() || pass.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please enter both your username and password.", "Validation Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    // Check credentials against users.txt
-    boolean matched = false;
-    java.io.File file = new java.io.File("users.txt");
-    if (file.exists()) {
-        try (java.util.Scanner scanner = new java.util.Scanner(file)) {
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] parts = line.split(",");
-                if (parts.length == 2 && parts[0].equals(user) && parts[1].equals(pass)) {
-                    matched = true;
-                    break;
-                }
-            }
-        } catch (java.io.FileNotFoundException e) {
-            // File doesn't exist yet
+        char[] pass = Password.getPassword();
+
+        if (user.isEmpty() || pass.length == 0) {
+            java.util.Arrays.fill(pass, '\0');
+            javax.swing.JOptionPane.showMessageDialog(this, "Please enter both your username and password.", "Validation Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    }
-    
-    if (!matched) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Invalid username or password. Please sign up first if you don't have an account.", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
-    // If matched, proceed to homepage
-    javax.swing.JOptionPane.showMessageDialog(this, "Login Successful!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-    Homepage home = new Homepage();
-    home.setVisible(true);
-    this.dispose();
+
+        boolean matched;
+        try {
+            matched = service.AuthService.getInstance().login(user, pass);
+        } catch (persistance.PersistenceException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "The accounts could not be read: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!matched) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Invalid username or password. Please sign up first if you don't have an account.", "Login Failed", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // If matched, proceed to the homepage
+        javax.swing.JOptionPane.showMessageDialog(this, "Login Successful!", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        Homepage home = new Homepage();
+        home.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

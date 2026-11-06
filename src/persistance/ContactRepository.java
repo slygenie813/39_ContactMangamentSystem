@@ -7,11 +7,7 @@ package persistance;
 import model.Contact;
 import java.util.List;
 
-/**
- * Where contacts are stored. ContactManager only depends on this interface,
- * so the storage can be changed (file, database, in-memory for tests)
- * without touching the business logic.
- */
+
 public interface ContactRepository {
 
     /**

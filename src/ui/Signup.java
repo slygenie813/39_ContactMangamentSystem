@@ -161,10 +161,11 @@ public class Signup extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(checkbox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkbox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4)
+                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -201,36 +202,43 @@ public class Signup extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+                // SIGN UP BUTTON: collect the fields, let AuthService check the rules and store a hashed password
         String username = jTextField1.getText().trim();
-    String email = jTextField2.getText().trim();
-    String password = new String(jPasswordField1.getPassword());
-    String confirmPassword = new String(jPasswordField2.getPassword());
-    
-    if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Validation Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-    
-    if (!password.equals(confirmPassword)) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Passwords do not match.", "Password Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
-    // Save user credentials to a file (users.txt)
-    try (java.io.FileWriter fw = new java.io.FileWriter("users.txt", true);
-         java.io.BufferedWriter bw = new java.io.BufferedWriter(fw);
-         java.io.PrintWriter out = new java.io.PrintWriter(bw)) {
-        out.println(username + "," + password); // Simple comma-separated storage
-    } catch (java.io.IOException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Error saving account: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    
-    javax.swing.JOptionPane.showMessageDialog(this, "Account registered successfully! You can now log in.", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-    
-    LoginPage login = new LoginPage();
-    login.setVisible(true);
-    this.dispose();
+        String email = jTextField2.getText().trim();
+        char[] password = jPasswordField1.getPassword();
+        char[] confirmPassword = jPasswordField2.getPassword();
+
+        if (username.isEmpty() || email.isEmpty() || password.length == 0) {
+            java.util.Arrays.fill(password, '\0');
+            java.util.Arrays.fill(confirmPassword, '\0');
+            javax.swing.JOptionPane.showMessageDialog(this, "Please fill in all required fields.", "Validation Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (!java.util.Arrays.equals(password, confirmPassword)) {
+            java.util.Arrays.fill(password, '\0');
+            java.util.Arrays.fill(confirmPassword, '\0');
+            javax.swing.JOptionPane.showMessageDialog(this, "Passwords do not match.", "Password Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        java.util.Arrays.fill(confirmPassword, '\0');
+
+        // AuthService stores a salted hash; the password itself is never saved
+        try {
+            service.AuthService.getInstance().register(username, email, password);
+        } catch (service.AuthException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Sign Up Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        } catch (persistance.PersistenceException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error saving account: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        javax.swing.JOptionPane.showMessageDialog(this, "Account registered successfully! You can now log in.", "Success", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+        LoginPage login = new LoginPage();
+        login.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

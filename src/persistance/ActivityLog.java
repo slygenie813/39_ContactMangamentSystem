@@ -9,21 +9,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * Appends one line per action to a log file, for example:
- *
- *   2026-11-04 10:15:32 | ADD | Thabo Nkosi (0712345678)
- *   2026-11-04 10:16:01 | ADD_REJECTED | A contact with this phone ...
- *
- * Used for every add, edit and delete (and every rejected attempt), and for
- * login events. Passwords are never written here.
- *
- * Logging must never break the program: if the log file cannot be written
- * the problem is reported once on System.err and the program carries on.
- *
- * The default file is "contacts.log" in the working directory; set the
- * system property "contacts.log" to change it.
- */
+
 public final class ActivityLog {
 
     private static final DateTimeFormatter TIME =

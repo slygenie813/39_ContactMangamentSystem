@@ -199,15 +199,9 @@ public class AuthService {
             }
         }
     }
-
-    // --------------------------------------------------
+    
+    
     // File handling
-    // --------------------------------------------------
-
-    /**
-     * Reads the file. Old "username,password" lines are converted to hashed
-     * accounts and the file is rewritten once.
-     */
     private List<Entry> loadEntries() {
         List<String> lines = FileHandler.readLines(file);
         List<Entry> entries = new ArrayList<>();
