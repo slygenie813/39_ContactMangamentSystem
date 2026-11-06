@@ -204,9 +204,10 @@ public class Contact implements Serializable {
    
 
     /**
-     * Two contacts are the same contact when they have the same id. The id
-     * never changes, even when the name, phone or email is edited. Duplicate
-     * detection by phone or email is done by ContactManager.
+     * Two contacts are the same contact when they have the same id.The id
+ never changes, even when the name, phone or email is edited. Duplicate
+ detection by phone or email is done by ContactManager.
+     * @param other
      */
     @Override
     public boolean equals(Object other) {

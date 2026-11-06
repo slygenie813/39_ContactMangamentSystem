@@ -6,16 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Search algorithms over a list of contacts.
- *
- * A blank (or null) query in the substring searches matches every
- * contact, so a search box that is cleared simply shows everything.
- * The substring searches ignore upper/lower case unless told otherwise.
- */
+// Search algorithms over a list of contacts.
+ 
 public class ContactSearch
 {
-    // ---------- exact-name searches (return an index, or -1) ----------
+    //exact-name searches (return an index, or -1)
 
     // Starts from index 0 and compares each contact's name to key.
     // Time complexity: O(n).
@@ -110,7 +105,7 @@ public class ContactSearch
         return -1; // not found
     }
 
-    // ---------- substring searches (return the matching contacts) ----------
+    //substring searches (return the matching contacts) 
     // Time complexity of each: O(n * m) for n contacts and a query of
     // length m -- every contact is inspected once.
 
@@ -207,7 +202,7 @@ public class ContactSearch
         return results;
     }
 
-    // ---------- helpers ----------
+    //helpers
 
     private static String prepare( String query )
     {
