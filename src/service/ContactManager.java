@@ -13,39 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * The single place the rest of the program uses to read, change, save and
- * search contacts. The GUI and the CLI both go through this class, so the
- * rules below are enforced in exactly one place.
- *
- * Validation rules
- *  - name must not be empty; phone must be 7-15 digits (optional leading +,
- *    spaces/brackets/hyphens are ignored); email must be a valid address
- *    (these are checked by Contact and reported as InvalidContactException)
- *  - two contacts may not share a phone number (compared after cleaning, so
- *    "071 234 5678" equals "0712345678")
- *  - two contacts may not share an email address (ignoring upper/lower case)
- *
- * Behaviour
- *  - Every change is saved straight away.
- *  - If a save fails, the change is undone in memory and the
- *    PersistenceException is rethrown, so what is on screen never differs
- *    from what is on disk.
- *  - If saved data exists but cannot be read, the constructor throws a
- *    PersistenceException and nothing is ever written over that data.
- *  - Every add, edit and delete is written to the ActivityLog, and so is
- *    every rejected attempt.
- *  - Methods are synchronized, so one instance can be shared safely.
- *
- * Data structures: an ArrayList keeps the contacts in order (O(1) append,
- * simple sorting and searching) and a HashMap-based phone index
- * (Contactindex) gives O(1) average phone lookups and duplicate checks. The
- * price is some extra memory and keeping the two in step, which this class
- * does after every change. Email duplicates use a plain O(n) scan, which is
- * fine for a personal contact list.
- *
- * Use ContactManager.getInstance() so all windows share one list.
- */
+
 public class ContactManager {
 
     private static ContactManager instance;
