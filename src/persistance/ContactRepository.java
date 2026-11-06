@@ -4,6 +4,11 @@
  */
 package persistance;
 
+/**
+ *
+ * @author nhlan
+ */
+
 import model.Contact;
 import java.util.List;
 
