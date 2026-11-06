@@ -229,7 +229,7 @@ public class Signup extends javax.swing.JFrame {
         } catch (service.AuthException e) {
             javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Sign Up Error", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
-        } catch (persistance.PersistenceException e) {
+        } catch (persistance.PersistanceException e) {
             javax.swing.JOptionPane.showMessageDialog(this, "Error saving account: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }

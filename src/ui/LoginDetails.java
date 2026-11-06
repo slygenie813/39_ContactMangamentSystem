@@ -166,7 +166,7 @@ public class LoginDetails extends javax.swing.JFrame {
         boolean matched;
         try {
             matched = service.AuthService.getInstance().login(user, pass);
-        } catch (persistance.PersistenceException e) {
+        } catch (persistance.PersistanceException e) {
             javax.swing.JOptionPane.showMessageDialog(this, "The accounts could not be read: " + e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }

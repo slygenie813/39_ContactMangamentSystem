@@ -90,7 +90,7 @@ public class FileHandler {
                 return new ArrayList<>();
             }
         } catch (IOException e) {
-            throw new PersistenceException(
+            throw new PersistanceException(
                     "Could not access " + file.toAbsolutePath() + ": "
                     + describe(e), e);
         }
@@ -133,7 +133,7 @@ public class FileHandler {
             return new ArrayList<>(
                     Files.readAllLines(file, StandardCharsets.UTF_8));
         } catch (IOException e) {
-            throw new PersistenceException(
+            throw new PersistanceException(
                     "Could not read " + file.toAbsolutePath() + ": "
                     + describe(e), e);
         }
@@ -181,7 +181,7 @@ public class FileHandler {
 
         } catch (IOException e) {
             deleteQuietly(temp);
-            throw new PersistenceException(
+            throw new PersistanceException(
                     "Could not save " + what + " to " + target + ": "
                     + describe(e), e);
         }
@@ -225,10 +225,10 @@ public class FileHandler {
                 ? e.getClass().getSimpleName() : e.getMessage();
     }
 
-    private static PersistenceException unreadable(
+    private static PersistanceException unreadable(
             Path file, String reason, Throwable cause) {
 
-        return new PersistenceException(
+        return new PersistanceException(
                 "Could not read contacts from " + file.toAbsolutePath()
                 + " (" + reason + "). The file has been left untouched so "
                 + "no data is overwritten.", cause);

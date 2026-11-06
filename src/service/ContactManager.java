@@ -4,7 +4,7 @@ import model.Contact;
 import persistance.ActivityLog;
 import persistance.ContactRepository;
 import persistance.FileContactRepository;
-import persistance.PersistenceException;
+import persistance.PersistanceException;
 import search.ContactSearch;
 import search.Contactindex;
 import java.time.LocalDateTime;
@@ -136,7 +136,7 @@ public class ContactManager {
 
         try {
             repository.save(contacts);
-        } catch (PersistenceException e) {
+        } catch (PersistanceException e) {
             contacts.remove(contacts.size() - 1); // undo: keep memory == disk
             ActivityLog.log("ADD_FAILED", e.getMessage());
             throw e;
@@ -210,7 +210,7 @@ public class ContactManager {
 
         try {
             repository.save(contacts);
-        } catch (PersistenceException e) {
+        } catch (PersistanceException e) {
             contacts.set(index, old); // undo: put the old details back
             ActivityLog.log("EDIT_FAILED", e.getMessage());
             throw e;
@@ -247,7 +247,7 @@ public class ContactManager {
 
         try {
             repository.save(contacts);
-        } catch (PersistenceException e) {
+        } catch (PersistanceException e) {
             contacts.add(index, removed); // undo: put it back where it was
             ActivityLog.log("DELETE_FAILED", e.getMessage());
             throw e;

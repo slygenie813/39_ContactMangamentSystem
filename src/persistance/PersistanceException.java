@@ -8,14 +8,14 @@ package persistance;
  *
  * @author nhlan
  */
-public class PersistenceException extends RuntimeException {
+public class PersistanceException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public PersistenceException(String message) {
+    public PersistanceException(String message) {
         super(message);
     }
 
-    public PersistenceException(String message, Throwable cause) {
+    public PersistanceException(String message, Throwable cause) {
         super(message, cause);
     }
 }

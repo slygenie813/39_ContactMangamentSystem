@@ -189,7 +189,7 @@ public class NewContact extends javax.swing.JFrame {
                 "Validation Error",
                 javax.swing.JOptionPane.ERROR_MESSAGE);
 
-        } catch (persistance.PersistenceException e) {
+        } catch (persistance.PersistanceException e) {
             // Nothing was changed; the file is unchanged.
             javax.swing.JOptionPane.showMessageDialog(this,
                 "The contact could not be saved.\n" + e.getMessage(),

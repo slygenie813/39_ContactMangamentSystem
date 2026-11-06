@@ -6,7 +6,7 @@ package service;
 
 import persistance.ActivityLog;
 import persistance.FileHandler;
-import persistance.PersistenceException;
+import persistance.PersistanceException;
 import util.Validation;
 
 import java.nio.charset.StandardCharsets;

@@ -394,7 +394,7 @@ public class Homepage extends javax.swing.JFrame {
     private void loadAndSortContacts() {
         try {
             showContacts(service.ContactManager.getInstance().viewAllContacts());
-        } catch (persistance.PersistenceException e) {
+        } catch (persistance.PersistanceException e) {
             showStorageError(e);
         }
     }
@@ -415,7 +415,7 @@ public class Homepage extends javax.swing.JFrame {
                     "No Results",
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-        } catch (persistance.PersistenceException e) {
+        } catch (persistance.PersistanceException e) {
             showStorageError(e);
         }
     }
@@ -485,7 +485,7 @@ public class Homepage extends javax.swing.JFrame {
                 "Delete Failed",
                 javax.swing.JOptionPane.WARNING_MESSAGE);
             refreshContacts();
-        } catch (persistance.PersistenceException e) {
+        } catch (persistance.PersistanceException e) {
             showStorageError(e);
         }
     }
@@ -495,7 +495,7 @@ public class Homepage extends javax.swing.JFrame {
         this.dispose();
     }
 
-    private void showStorageError(persistance.PersistenceException e) {
+    private void showStorageError(persistance.PersistanceException e) {
         javax.swing.JOptionPane.showMessageDialog(this,
             e.getMessage(),
             "Storage Error",
