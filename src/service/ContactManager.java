@@ -7,6 +7,8 @@ import persistance.FileContactRepository;
 import persistance.PersistanceException;
 import search.ContactSearch;
 import search.Contactindex;
+import search.Contactsort;
+import search.Concurrentcontactsearch;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +18,8 @@ import java.util.Objects;
 
 public class ContactManager {
 
+    // Threaded search only pays off on big lists (thread start-up cost)
+    private static final int CONCURRENT_THRESHOLD = 5000;
     private static ContactManager instance;
 
     private final ContactRepository repository;
@@ -201,6 +205,33 @@ public class ContactManager {
      * @throws InvalidContactException if no contact has this id
      * @throws PersistenceException    if saving fails (nothing is deleted)
      */
+    
+    /** Name search; uses threads on large lists. Run from a SwingWorker in the GUI. */
+    public List<Contact> searchByName(String query) throws InterruptedException {
+       List<Contact> snapshot = viewAllContacts(); // synchronized copy, safe to share with threads
+       if (snapshot.size() < CONCURRENT_THRESHOLD) {
+           return ContactSearch.searchByName(snapshot, query);
+       }
+       return Concurrentcontactsearch.searchByNameConcurrent(
+               snapshot, query, Runtime.getRuntime().availableProcessors());
+    }
+    
+    
+    /** All contacts sorted A-Z with your own merge sort: O(n log n), stable. */
+    public synchronized List<Contact> viewAllContactsMergeSorted() {
+        List<Contact> copy = new ArrayList<>(contacts);
+        Contactsort.mergeSortByName(copy);
+        return copy;
+    }
+    
+    
+    /** Exact name lookup: sort once, then binary search O(log n). */
+    public Contact findByExactName(List<Contact> sortedByName, String name) {
+        int i = ContactSearch.binarySearchByName(sortedByName, name);
+        return i < 0 ? null : sortedByName.get(i);
+    }
+    
+    
     public synchronized void deleteContactById(String id)
             throws InvalidContactException {
 

@@ -8,10 +8,12 @@ public class Concurrentcontactsearch
 {
     // Splits contacts into t chunks and  searches each chunk on its
     // own Thread  and merges the results once every thread has finished.
-    public static List<Contact> searchByNameConcurrent(
-        List<Contact> contacts, String query, int threadCount )
-        throws InterruptedException
-    {
+    public static List<Contact> searchByNameConcurrent(List<Contact> contacts, String query, int threadCount )throws InterruptedException{
+        
+        if ( threadCount < 1 ){
+            throw new IllegalArgumentException( "threadCount must be at least 1" );
+        }
+        
         int n = contacts.size();
         int chunkSize = Math.max( 1, n / threadCount );
 

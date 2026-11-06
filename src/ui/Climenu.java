@@ -39,13 +39,15 @@ public class Climenu {
 
             try {
                 switch (choice) {
-                    case "1": addContact();      break;
-                    case "2": viewContacts();    break;
-                    case "3": editContact();     break;
-                    case "4": deleteContact();   break;
-                    case "5": searchContacts();  break;
-                    case "6": sortContacts();    break;
-                    case "7":
+                    case "1": addContact();         break;
+                    case "2": viewContacts();       break;
+                    case "3": editContact();        break;
+                    case "4": deleteContact();      break;
+                    case "5": searchContacts();     break;
+                    case "6": threadedSearchContacts(); break; // Added
+                    case "7": binarySearchContact();    break; // Added
+                    case "8": sortContacts();       break; // Shifted from 6
+                    case "9":                               // Shifted from 7
                         System.out.println("Thank you for using Contact Management, Bye.");
                         running = false;
                         break;
@@ -60,10 +62,11 @@ public class Climenu {
 
     private static void printMenu() {
         System.out.print("\n*================== CLI MENU ====================*\n");
-        System.out.print("* 1. ADD                                 2. VIEW  *\n");
-        System.out.print("* 3. EDIT                                4. DELETE*\n");
-        System.out.print("* 5. SEARCH                              6. SORT  *\n");
-        System.out.print("* 7. EXIT                                         *\n");
+        System.out.print("* 1. ADD                     2. VIEW     *\n");
+        System.out.print("* 3. EDIT                    4. DELETE   *\n");
+        System.out.print("* 5. SEARCH (Substring)      6. THREADED SEARCH *\n");
+        System.out.print("* 7. BINARY SEARCH (Exact)   8. SORT     *\n");
+        System.out.print("* 9. EXIT                                *\n");
         System.out.print("***************************************************\n");
     }
 
@@ -151,13 +154,57 @@ public class Climenu {
             show(found);
         }
     }
+    
+    private static void threadedSearchContacts() {
+        String query = ask("Enter name for threaded search: ");
+        if (query.isEmpty()) {
+            System.out.println("Nothing to search for.");
+            return;
+        }
+        try {
+            List<Contact> found = manager.searchByName(query);
+            if (found.isEmpty()) {
+                System.out.println("No contacts match \"" + query + "\".");
+            } else {
+                System.out.println(found.size() + " match(es) (Threaded Search):");
+                show(found);
+            }
+        } catch (InterruptedException e) {
+            System.out.println("Search was interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+    
+    private static void binarySearchContact() {
+        String exactName = ask("Enter exact name to search (Binary Search): ");
+        if (exactName.isEmpty()) {
+            System.out.println("Name cannot be empty.");
+            return;
+        }
+
+        // 1. Sort using merge sort first
+        List<Contact> sortedList = manager.viewAllContactsMergeSorted();
+
+        // 2. Perform binary search lookup
+        Contact found = manager.findByExactName(sortedList, exactName);
+        if (found == null) {
+            System.out.println("No contact found with exact name \"" + exactName + "\".");
+        } else {
+            System.out.println("Found via Binary Search (Merge Sorted):");
+            System.out.println("Name: " + found.getName() 
+                    + " | Phone: " + found.getPhone() 
+                    + " | Email: " + found.getEmail());
+        }
+    }
 
     private static void sortContacts() {
-        String how = ask("Sort by 1. Name  2. Phone: ");
+        String how = ask("Sort by 1. Name (Default)  2. Phone  3. Merge Sort (Name): ");
         if (how.equals("1")) {
             show(manager.viewAllContactsSorted());
         } else if (how.equals("2")) {
             show(manager.viewAllContactsSorted(Contact.BY_PHONE));
+        } else if (how.equals("3")) {
+            show(manager.viewAllContactsMergeSorted()); // Added merge sort option
         } else {
             System.out.println("INVALID INPUT, TRY AGAIN");
         }
