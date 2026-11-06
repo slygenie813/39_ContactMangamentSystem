@@ -3,11 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
 package persistance;
-
 /**
  *
  * @author nhlan
  */
+
 
 import model.Contact;
 import java.util.List;

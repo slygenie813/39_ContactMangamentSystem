@@ -33,7 +33,7 @@ public final class ActivityLog {
         // static utility class
     }
 
-    /** Changes the log file (mainly for tests). */
+    // Changes the log file (mainly for tests)
     public static synchronized void setFile(Path newFile) {
         file = newFile;
         warned = false;
@@ -43,7 +43,7 @@ public final class ActivityLog {
         return file;
     }
 
-    /** Writes one line: time | action | detail. Never throws. */
+    // Writes one line: time | action | detail. Never throws
     public static synchronized void log(String action, String detail) {
         String line = LocalDateTime.now().format(TIME)
                 + " | " + clean(action)
