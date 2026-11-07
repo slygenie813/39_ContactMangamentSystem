@@ -1,8 +1,5 @@
-
-
 package search;
 
-import model.Contact;
 import java.util.ArrayList;
 import java.util.List;
 import model.Contact;
@@ -45,7 +42,7 @@ public class Contactsearchsortdemo
         System.out.println( "\n--- After Selection Sort (by name) ---" );
         printContacts( selectionCopy );
 
-        // ---------- Example: Insertion Sort ----------
+        // Example: Insertion Sort 
         List<Contact> insertionCopy = new ArrayList<>( contacts );
         Contactsort.insertionSortByName( insertionCopy );
         System.out.println( "\n--- After Insertion Sort (by name) ---" );

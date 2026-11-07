@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
-package persistance;
-/**
- *
- * @author nhlan
- */
 
+package persistance;
 import model.Contact;
 
 import java.io.BufferedInputStream;
@@ -50,15 +42,14 @@ public class FileHandler {
         // static utility class
     }
 
-    /** Something that writes the contents of a file. */
+    // Writes the contents of a file.
     @FunctionalInterface
     private interface FileWriterAction {
         void write(FileOutputStream out) throws IOException;
     }
 
-    // --------------------------------------------------
+   
     // Contacts (serialized list)
-    // --------------------------------------------------
 
     public static void saveContacts(List<Contact> contacts) {
         saveContacts(contacts, DEFAULT_PATH);
@@ -139,7 +130,7 @@ public class FileHandler {
         }
     }
 
-    /** Replaces the file with these lines, using the same safe write. */
+    // Replaces the file with these lines, using the same safe write. 
     public static void writeLinesAtomically(Path file, List<String> lines) {
         Objects.requireNonNull(lines, "lines cannot be null");
 
@@ -154,10 +145,8 @@ public class FileHandler {
         });
     }
 
-    // --------------------------------------------------
     // Helpers
-    // --------------------------------------------------
-
+   
     private static void writeAtomically(
             Path file, String what, FileWriterAction action) {
 
@@ -209,7 +198,7 @@ public class FileHandler {
         }
     }
 
-    /** Turns an I/O error into a sentence a user can act on. */
+    // Turns an I/O error into a sentence a user can act on. 
     private static String describe(IOException e) {
         if (e instanceof AccessDeniedException) {
             return "permission denied - the file or folder is read-only "

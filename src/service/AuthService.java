@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package service;
 
 import persistance.ActivityLog;
@@ -25,24 +22,25 @@ import java.util.regex.Pattern;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-/**
- * Creates accounts and checks logins. Passwords are never stored: each
- * account keeps a random salt and a PBKDF2-HMAC-SHA256 hash of the password.
- *
- * File format (users.txt, one account per line, fields separated by ':'):
- *
- *   username:email:iterations:salt:hash        (salt and hash are Base64)
- *
- * Older files whose lines look like "username,password" (plain text) are
- * converted to the hashed format automatically the first time the file is
- * read, so existing accounts keep working.
- *
- * Rules: username 3-30 letters, digits, '_', '.' or '-' (not case
- * sensitive, must be unique); password at least 6 characters; valid email.
- *
- * The default file is "users.txt" in the working directory; set the system
- * property "users.file" to change it.
- */
+// Creates accounts and checks logins.
+// Passwords are never stored: each account keeps a random salt
+// and a PBKDF2-HMAC-SHA256 hash of the password.
+//
+// File format (users.txt, one account per line, fields separated by ':'):
+//   username:email:iterations:salt:hash        (salt and hash are Base64)
+//
+// Older files whose lines look like "username,password" (plain text) are
+// converted to the hashed format automatically the first time the file is
+// read, so existing accounts keep working.
+//
+// Rules:
+//   - username 3-30 letters, digits, '_', '.' or '-' (not case
+//     sensitive, must be unique)
+//   - password at least 6 characters
+//   - valid email
+//
+// The default file is "users.txt" in the working directory;
+// set the system property "users.file" to change it.
 public class AuthService {
 
     private static final int ITERATIONS = 120_000;
@@ -59,7 +57,7 @@ public class AuthService {
 
     private final Path file;
 
-    /** One parsed line of the accounts file. */
+    // One parsed line of the accounts file. 
     private static final class Entry {
         final String raw;       // the line as stored (kept for unknown lines)
         final String username;  // null when the line is not an account
@@ -97,17 +95,16 @@ public class AuthService {
         this.file = file;
     }
 
-    // --------------------------------------------------
+    
     // Registering
-    // --------------------------------------------------
+  
 
-    /**
-     * Creates an account. The password array is cleared afterwards.
-     *
-     * @throws AuthException        if the username, email or password is
-     *                              not acceptable, or the username is taken
-     * @throws PersistenceException if the accounts file cannot be read/saved
-     */
+    // Creates an account. The password array is cleared afterwards.
+     
+     // @throws AuthException        if the username, email or password is
+     //                              not acceptable, or the username is taken
+     // @throws PersistenceException if the accounts file cannot be read/saved
+     
     public synchronized void register(
             String username, String email, char[] password)
             throws AuthException {
@@ -155,16 +152,13 @@ public class AuthService {
         throw new AuthException(message);
     }
 
-    // --------------------------------------------------
+   
     // Logging in
-    // --------------------------------------------------
-
-    /**
-     * Checks a username and password. The password array is cleared
-     * afterwards.
-     *
-     * @throws PersistenceException if the accounts file cannot be read
-     */
+    
+    // Checks a username and password. The password array is cleared afterwards.
+     
+     // @throws PersistenceException if the accounts file cannot be read
+     
     public synchronized boolean login(String username, char[] password) {
         try {
             String name = username == null ? "" : username.trim();

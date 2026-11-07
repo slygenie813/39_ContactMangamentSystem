@@ -203,12 +203,9 @@ public class Contact implements Serializable {
     // Contact methods
    
 
-    /**
-     * Two contacts are the same contact when they have the same id.The id
- never changes, even when the name, phone or email is edited. Duplicate
- detection by phone or email is done by ContactManager.
-     * @param other
-     */
+    // Two Contact objects are equal iff they have the same id.
+    // id is immutable (unchanged by name/phone/email edits).
+    // Phone/email duplicate detection is handled by ContactManager.
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -225,10 +222,10 @@ public class Contact implements Serializable {
         return id.hashCode();
     }
 
-    /**
-     * Short text for logs and debugging, for example:
-     * Contact{name='Jane Doe', phone='0845678901', email='jane@example.com'}
-     */
+    
+     //Short text for logs and debugging, for example:
+     //Contact{name='Jane Doe', phone='0845678901', email='jane@example.com'}
+     
     @Override
     public String toString() {
         return "Contact{name='" + name + "', phone='" + phoneNumber
