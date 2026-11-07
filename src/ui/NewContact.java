@@ -69,23 +69,23 @@ public class NewContact extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(0, 204, 255));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 90, 150, -1));
+        jPanel1.setLayout(new PortableLibrary.AbsoluteLayout());
+        jPanel1.add(jTextField2, new PortableLibrary.AbsoluteConstraints(135, 90, 150, -1));
 
         jLabel3.setText("Phone Number");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 145, -1, -1));
+        jPanel1.add(jLabel3, new PortableLibrary.AbsoluteConstraints(8, 145, -1, -1));
 
         jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextField3.setVerifyInputWhenFocusTarget(false);
-        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 190, 150, -1));
+        jPanel1.add(jTextField3, new PortableLibrary.AbsoluteConstraints(135, 190, 150, -1));
 
         jLabel4.setText("Email");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 185, 37, -1));
-        jPanel1.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 140, 150, -1));
+        jPanel1.add(jLabel4, new PortableLibrary.AbsoluteConstraints(8, 185, 37, -1));
+        jPanel1.add(jTextField4, new PortableLibrary.AbsoluteConstraints(135, 140, 150, -1));
 
         jLabel5.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         jLabel5.setText("ADD/EDIT Contact");
-        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 10, 122, -1));
+        jPanel1.add(jLabel5, new PortableLibrary.AbsoluteConstraints(150, 10, 122, -1));
 
         jButton2.setBackground(new java.awt.Color(255, 0, 0));
         jButton2.setText("Back");
@@ -94,20 +94,20 @@ public class NewContact extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, -1, -1));
+        jPanel1.add(jButton2, new PortableLibrary.AbsoluteConstraints(10, 300, -1, -1));
 
         jLabel1.setText("First Name");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 53, 72, -1));
+        jPanel1.add(jLabel1, new PortableLibrary.AbsoluteConstraints(8, 53, 72, -1));
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(135, 50, 150, -1));
+        jPanel1.add(jTextField1, new PortableLibrary.AbsoluteConstraints(135, 50, 150, -1));
 
         jLabel2.setText("Last Name");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 93, -1, -1));
+        jPanel1.add(jLabel2, new PortableLibrary.AbsoluteConstraints(8, 93, -1, -1));
 
         jButton1.setBackground(new java.awt.Color(51, 255, 51));
         jButton1.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
@@ -118,7 +118,7 @@ public class NewContact extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 300, -1, -1));
+        jPanel1.add(jButton1, new PortableLibrary.AbsoluteConstraints(330, 300, -1, -1));
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
