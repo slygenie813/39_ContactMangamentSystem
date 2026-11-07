@@ -1,224 +1,169 @@
+
+
 package search;
 
 import model.Contact;
-import util.Validation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-// Search algorithms over a list of contacts.
- 
 public class ContactSearch
 {
-    //exact-name searches (return an index, or -1)
+    
 
-    // Starts from index 0 and compares each contact's name to key.
-    // Time complexity: O(n).
+   
+    
+    //Starts from index 0 on the list and compares the contact's name to key
     public static int linearSearchByName( List<Contact> contacts, String key )
     {
-        if ( key == null )
+        
+        if ( contacts == null || key == null || key.trim().isEmpty() )
         {
             return -1;
         }
-
-        String target = key.trim();
-
+        
         for ( int i = 0; i < contacts.size(); i++ )
         {
-            if ( contacts.get( i ).getName().equalsIgnoreCase( target ) )
+            if ( contacts.get( i ).getName().equalsIgnoreCase( key ) )
             {
+                
                 return i; // return index when the value is found
-            }
-        }
+            } 
+            
+   
+        } 
 
-        return -1; // -1 means the value was not found
-    }
+        return -1; // -1 means the value was not found end the method
+    } 
 
-    // Same result as linearSearchByName, written recursively.
-    // Call it with index 0 (or use the two-argument version below).
-    // Time O(n); every call adds a stack frame, so the stack depth is O(n)
-    // too. For very large lists prefer linearSearchByName, which cannot
-    // overflow the stack.
+
+    //Checks if the index matches 
     public static int recursiveLinearSearchByName(
         List<Contact> contacts, String key, int index )
     {
-        // base case: key is missing, or we ran past the end of the list
-        // (this also covers an empty list)
-        if ( key == null || index < 0 || index >= contacts.size() )
+        // base case: list is empty or the end has been reached
+        if ( contacts == null || key == null ||
+             index < 0 || index >= contacts.size() )
         {
             return -1;
         }
-
-        // base case: found the match at this index
+        // base case found the match at this index
         if ( contacts.get( index ).getName().equalsIgnoreCase( key.trim() ) )
         {
             return index;
         }
+        else // check the next index
+        {
+            return recursiveLinearSearchByName( contacts, key, index + 1 );
+        } // 
+    } 
 
-        // recursive case: check the next index
-        return recursiveLinearSearchByName( contacts, key, index + 1 );
-    }
 
-    public static int recursiveLinearSearchByName(
-        List<Contact> contacts, String key )
-    {
-        return recursiveLinearSearchByName( contacts, key, 0 );
-    }
+    
 
-    // Binary search. The list MUST already be sorted by name
-    // (Contactsort.sortByName); on an unsorted list the result is wrong.
-    // Time complexity: O(log n). Returns the index of one matching
-    // contact, or -1. If several contacts share the name, any of them
-    // may be returned.
+      // checks the middle of an already sorted list and compares its name to key
     public static int binarySearchByName( List<Contact> contacts, String key )
     {
-        if ( key == null )
+        
+        if ( contacts == null || key == null || key.trim().isEmpty() )
         {
             return -1;
         }
 
-        String target = key.trim();
+        
         int low = 0;
         int high = contacts.size() - 1;
 
         while ( low <= high )
         {
-            int middle = ( low + high ) >>> 1; // cannot overflow
+            int middle = ( low + high ) / 2;
 
-            int comparison = String.CASE_INSENSITIVE_ORDER.compare(
-                contacts.get( middle ).getName(), target );
+            
+            int comparison =
+                contacts.get( middle ).getName().compareToIgnoreCase( key );
 
-            if ( comparison == 0 )
+            if ( comparison == 0 ) // Case 1: key found
             {
-                return middle; // key found
+               
+                return middle;
             }
-            else if ( comparison < 0 )
+            else if ( comparison < 0 ) // Case 2: key is further up the list
             {
-                low = middle + 1; // middle name sorts before key: go right
+                low = middle + 1;
             }
-            else
+            else // Case 3: key is further down the list
             {
-                high = middle - 1; // middle name sorts after key: go left
-            }
-        }
+                high = middle - 1;
+            } 
+        } 
 
         return -1; // not found
     }
-
-    //substring searches (return the matching contacts) 
-    // Time complexity of each: O(n * m) for n contacts and a query of
-    // length m -- every contact is inspected once.
-
+    
+    // Time complexity: O(n), every contact must be inspected once.
     public static List<Contact> searchByName( List<Contact> contacts, String query )
     {
-        return searchByName( contacts, query, true );
-    }
-
-    public static List<Contact> searchByName(
-        List<Contact> contacts, String query, boolean ignoreCase )
-    {
         List<Contact> results = new ArrayList<>();
-        String key = prepare( query );
-
-        for ( Contact c : contacts )
+        
+        if ( contacts == null || query == null || query.trim().isEmpty() )
         {
-            if ( contains( c.getName(), key, ignoreCase ) )
+            return results;
+        }
+        
+        String key = query.toLowerCase().trim(); //converts querys to lower case and strips their trailling spaces
+
+        for ( Contact c : contacts )// scans every contact 
+        {
+            if ( c.getName().toLowerCase().contains( key ) )//Lowercases each contacts name and checks if it contains key
             {
                 results.add( c );
-            }
-        }
+            } 
+        } 
 
         return results;
-    }
-
-    // The query is normalized the same way stored phone numbers are, so
-    // "071 234" finds "0712345678".
+    } 
+// 
     public static List<Contact> searchByPhone( List<Contact> contacts, String query )
     {
-        List<Contact> results = new ArrayList<>();
-        String key = Validation.normalizePhone( query );
-
-        for ( Contact c : contacts )
+        List<Contact> results = new ArrayList<>();// creates an empty list which will collect contacts matching the query
+        
+        if ( contacts == null || query == null || query.trim().isEmpty() )
         {
-            if ( c.getPhone().contains( key ) )
-            {
-                results.add( c );
-            }
+            return results;
         }
 
+        String key = query.trim();//Takes a query and creates a copy without leading and trailling white spaces
+
+        for ( Contact c : contacts )//scans every contact 
+        {
+            if ( c.getPhone().contains( key ) )// check if the contacts phone number contains the search key
+            {
+                results.add( c );//add the reuslt to the list 
+            } 
+        } 
+
         return results;
-    }
+    } 
 
     public static List<Contact> searchByEmail( List<Contact> contacts, String query )
     {
-        return searchByEmail( contacts, query, true );
-    }
-
-    public static List<Contact> searchByEmail(
-        List<Contact> contacts, String query, boolean ignoreCase )
-    {
-        List<Contact> results = new ArrayList<>();
-        String key = prepare( query );
-
-        for ( Contact c : contacts )
+        List<Contact> results = new ArrayList<>();;// creates an empty list which will collect contacts matching the query
+        
+        if ( contacts == null || query == null || query.trim().isEmpty() )
         {
-            if ( contains( c.getEmail(), key, ignoreCase ) )
-            {
-                results.add( c );
-            }
+            return results;
         }
+        
+        String key = query.toLowerCase().trim();//Takes a query and creates a copy without leading and trailling white spaces
+
+        for ( Contact c : contacts )//scans every contact 
+        {
+            if ( c.getEmail().toLowerCase().contains( key ) )// check if the contacts email contains the search key
+            {
+                results.add( c );//add the result to the list 
+            } 
+        } 
 
         return results;
-    }
+    } 
 
-    // One search box for everything: a contact matches if the query is
-    // found in its name, its phone number or its email. Results keep the
-    // order of the input list, and each contact appears at most once.
-    public static List<Contact> search( List<Contact> contacts, String query )
-    {
-        return search( contacts, query, true );
-    }
-
-    public static List<Contact> search(
-        List<Contact> contacts, String query, boolean ignoreCase )
-    {
-        List<Contact> results = new ArrayList<>();
-        String text = prepare( query );
-        String digits = Validation.normalizePhone( query );
-
-        for ( Contact c : contacts )
-        {
-            boolean matches =
-                contains( c.getName(), text, ignoreCase )
-                || contains( c.getEmail(), text, ignoreCase )
-                || ( !digits.isEmpty() && c.getPhone().contains( digits ) );
-
-            if ( matches )
-            {
-                results.add( c );
-            }
-        }
-
-        return results;
-    }
-
-    //helpers
-
-    private static String prepare( String query )
-    {
-        return query == null ? "" : query.trim();
-    }
-
-    // lower-cases with a fixed locale (so results do not change with the
-    // computer's language settings) when ignoring case
-    private static boolean contains( String text, String key, boolean ignoreCase )
-    {
-        if ( !ignoreCase )
-        {
-            return text.contains( key );
-        }
-
-        return text.toLowerCase( Locale.ROOT ).contains( key.toLowerCase( Locale.ROOT ) );
-    }
-
-}
+} 
