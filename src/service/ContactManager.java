@@ -250,14 +250,6 @@ public class ContactManager {
         ActivityLog.log("DELETE",
                 removed.getName() + " (" + removed.getPhone() + ")");
     }
-
-<<<<<<< Updated upstream
-   
-    // Reading and searching (these return copies, so callers can sort
-=======
-       // Reading and searching (these return copies, so callers can sort
->>>>>>> Stashed changes
-    // or filter the result without touching the manager's own list)
     
 
     public synchronized List<Contact> viewAllContacts() {
