@@ -116,17 +116,17 @@ public class ContactManager {
    
     // Editing
 
-    /**
-     * Changes the details of the contact with this id and saves. The id and
-     * the date added stay the same; the last-modified time is updated.
-     * Nothing is saved when the details are unchanged.
-     *
-     * @throws InvalidContactException   if there is no such contact, or the
-     *                                   new name, phone or email is invalid
-     * @throws DuplicateContactException if the new phone or email already
-     *                                   belongs to a different contact
-     * @throws PersistenceException      if saving fails (nothing is changed)
-     */
+    
+     // Changes the details of the contact with this id and saves. The id and
+     // the date added stay the same; the last-modified time is updated.
+     // Nothing is saved when the details are unchanged.
+     
+     // @throws InvalidContactException   if there is no such contact, or the
+     //                                   new name, phone or email is invalid
+     // @throws DuplicateContactException if the new phone or email already
+     //                                   belongs to a different contact
+     // @throws PersistenceException      if saving fails (nothing is changed)
+     
     public synchronized void updateContact(
             String id, String name, String phone, String email)
             throws InvalidContactException, DuplicateContactException {
@@ -192,13 +192,13 @@ public class ContactManager {
     // Deleting
    
 
-    /**
-     * Deletes the contact with this id and saves. Deleting by id removes
-     * exactly one contact, even when several people share a name.
-     *
-     * @throws InvalidContactException if no contact has this id
-     * @throws PersistenceException    if saving fails (nothing is deleted)
-     */
+   
+    // Deletes the contact with this id and saves. Deleting by id removes
+     // exactly one contact, even when several people share a name.
+     
+     // @throws InvalidContactException if no contact has this id
+     // @throws PersistenceException    if saving fails (nothing is deleted)
+     
     
     /** Name search; uses threads on large lists. Run from a SwingWorker in the GUI. */
     public List<Contact> searchByName(String query) throws InterruptedException {
