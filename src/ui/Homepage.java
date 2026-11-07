@@ -288,7 +288,30 @@ public class Homepage extends javax.swing.JFrame {
         // TODO add your handling code here:
         /*NewContact edit = new NewContact(this);
         edit.setVisible(true);*/
-        editSelectedContact();
+        //editSelectedContact();
+        
+        // Get the selected index or contact from your list
+        int selectedIndex = jList1.getSelectedIndex();
+        if (selectedIndex == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Please select a contact to edit.",
+                "No Selection",
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            // Fetch the sorted list and get the exact contact object
+            java.util.List<model.Contact> contacts = service.ContactManager.getInstance().viewAllContactsSorted();
+            model.Contact selectedContact = contacts.get(selectedIndex);
+
+            // Open NewContact in edit mode, passing 'this' (homepage) and the contact
+            NewContact editWindow = new NewContact(this, selectedContact);
+            editWindow.setVisible(true);
+            this.dispose(); // Optional: close or leave homepage open behind it
+        } catch (persistance.PersistanceException e) {
+            showStorageError(e);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     
