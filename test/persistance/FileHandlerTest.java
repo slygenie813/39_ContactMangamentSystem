@@ -81,7 +81,7 @@ class FileHandlerTest {
         }
     }
 
-    // ---------- first run / empty ----------
+    //  first run / empty 
 
     @Test
     void missingFileMeansNoContactsYet() {
@@ -95,7 +95,7 @@ class FileHandlerTest {
         assertTrue(FileHandler.loadContacts(file).isEmpty());
     }
 
-    // ---------- corrupted / hostile files ----------
+    //  corrupted / hostile files 
 
     @Test
     void garbageFileIsReportedAndLeftUntouched() throws IOException {
@@ -135,7 +135,7 @@ class FileHandlerTest {
         assertThrows(PersistenceException.class, () -> FileHandler.loadContacts(file));
     }
 
-    // ---------- I/O errors ----------
+    //  I/O errors 
 
     @Test
     void savingToAMissingFolderFails() {
@@ -143,7 +143,7 @@ class FileHandlerTest {
         assertThrows(PersistenceException.class, () -> FileHandler.saveContacts(sample(), file));
     }
 
-    // ---------- text lines (used by the accounts file) ----------
+    //  text lines (used by the accounts file) 
 
     @Test
     void writeAndReadLinesRoundTrip() {
@@ -157,7 +157,7 @@ class FileHandlerTest {
         assertTrue(FileHandler.readLines(dir.resolve("none.txt")).isEmpty());
     }
 
-    // ---------- repository wrapper ----------
+    // repository wrapper 
 
     @Test
     void fileContactRepositoryRoundTrip() {
