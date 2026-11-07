@@ -26,7 +26,7 @@ public class ContactManager {
     private final List<Contact> contacts;
     private final Contactindex phoneIndex = new Contactindex();
 
-    /** Returns the shared manager, creating it (and loading the file) once. */
+    // Returns the shared manager, creating it (and loading the file) once. 
     public static synchronized ContactManager getInstance() {
         if (instance == null) {
             instance = new ContactManager();
@@ -34,37 +34,33 @@ public class ContactManager {
         return instance;
     }
 
-    /**
-     * Uses the default contacts file.
-     *
-     * @throws PersistenceException if the data file exists but is unreadable
-     */
+    // Uses the default contacts file.
+     
+     // @throws PersistenceException if the data file exists but is unreadable
+     
     public ContactManager() {
         this(new FileContactRepository());
     }
 
-    /**
-     * Uses any storage (for example an in-memory one for tests).
-     *
-     * @throws PersistenceException if the stored data cannot be read
-     */
+    // Uses any storage (for example an in-memory one for tests).
+     
+     // @throws PersistenceException if the stored data cannot be read
+     
     public ContactManager(ContactRepository repository) {
         this.repository = Objects.requireNonNull(repository, "repository");
         this.contacts = new ArrayList<>(repository.load());
         this.phoneIndex.rebuild(contacts);
     }
 
-    // --------------------------------------------------
-    // Adding
-    // --------------------------------------------------
 
-    /**
-     * Validates the details, then adds and saves the contact.
-     *
-     * @throws InvalidContactException   if the name, phone or email is invalid
-     * @throws DuplicateContactException if the phone or email is already used
-     * @throws PersistenceException      if saving fails (nothing is added)
-     */
+    // Adding
+
+    //Validates the details, then adds and saves the contact.
+     
+     // @throws InvalidContactException   if the name, phone or email is invalid
+     // @throws DuplicateContactException if the phone or email is already used
+     // @throws PersistenceException      if saving fails (nothing is added)
+     
     public synchronized void addContact(String name, String phone, String email)
             throws InvalidContactException, DuplicateContactException {
 
@@ -80,13 +76,12 @@ public class ContactManager {
         addContact(contact);
     }
 
-    /**
-     * Adds and saves an already-validated contact.
-     *
-     * @throws InvalidContactException   if the contact is null
-     * @throws DuplicateContactException if the phone or email is already used
-     * @throws PersistenceException      if saving fails (nothing is added)
-     */
+    // Adds and saves an already-validated contact.
+     
+     // @throws InvalidContactException   if the contact is null
+     // @throws DuplicateContactException if the phone or email is already used
+     // @throws PersistenceException      if saving fails (nothing is added)
+     
     public synchronized void addContact(Contact c)
             throws InvalidContactException, DuplicateContactException {
 
@@ -118,9 +113,8 @@ public class ContactManager {
         ActivityLog.log("ADD", c.getName() + " (" + c.getPhone() + ")");
     }
 
-    // --------------------------------------------------
+   
     // Editing
-    // --------------------------------------------------
 
     /**
      * Changes the details of the contact with this id and saves. The id and
@@ -194,9 +188,9 @@ public class ContactManager {
                 + updated.getName() + " (" + updated.getPhone() + ")");
     }
 
-    // --------------------------------------------------
+    
     // Deleting
-    // --------------------------------------------------
+   
 
     /**
      * Deletes the contact with this id and saves. Deleting by id removes
@@ -257,8 +251,12 @@ public class ContactManager {
                 removed.getName() + " (" + removed.getPhone() + ")");
     }
 
+<<<<<<< Updated upstream
    
     // Reading and searching (these return copies, so callers can sort
+=======
+       // Reading and searching (these return copies, so callers can sort
+>>>>>>> Stashed changes
     // or filter the result without touching the manager's own list)
     
 
