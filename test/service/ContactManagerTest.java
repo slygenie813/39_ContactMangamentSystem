@@ -45,7 +45,7 @@ class ContactManagerTest {
         return new ContactManager(repo);
     }
 
-    // ---------- adding ----------
+    // adding 
 
     @Test
     void startsEmpty() {
@@ -124,7 +124,7 @@ class ContactManagerTest {
         assertEquals(2, m.count());
     }
 
-    // ---------- editing ----------
+    // editing 
 
     @Test
     void updateChangesDetailsAndKeepsIdAndDateAdded() throws Exception {
@@ -199,7 +199,7 @@ class ContactManagerTest {
         assertEquals(savesBefore, repo.saves);
     }
 
-    // ---------- deleting ----------
+    // deleting 
 
     @Test
     void deleteRemovesOnlyThatContact() throws Exception {
@@ -231,7 +231,7 @@ class ContactManagerTest {
         assertThrows(InvalidContactException.class, () -> m.deleteContactById(null));
     }
 
-    // ---------- rollback when saving fails ----------
+    // rollback when saving fails 
 
     @Test
     void failedSaveOnAddRollsBack() {
@@ -271,7 +271,7 @@ class ContactManagerTest {
         assertNotNull(m.findById(id));
     }
 
-    // ---------- reading, searching, sorting ----------
+    //  reading, searching, sorting
 
     @Test
     void searchFindsByNamePhoneAndEmail() throws Exception {
