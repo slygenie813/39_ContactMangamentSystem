@@ -3,7 +3,27 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/lmmng/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/model/Contact.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/ui/NewContact.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/test/model/ContactTest.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/test/persistance/ActivityLogTest.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/test/util/ValidationTest.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/ui/Contact%20Manager(2).png</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/service/ContactManager.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/search/Concurrentcontactsearch.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/ui/Climenu.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/ui/Homepage.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/PortableLibrary/AbsoluteConstraints.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/PortableLibrary/AbsoluteLayout.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/ui/Signup.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/ui/LoginPage.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/ui/LoginDetails.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/model/Contact.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/search/ContactSearch.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/persistance/ActivityLog.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/persistance/ContactRepository.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/persistance/FileContactRepository.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/persistance/FileHandler.java</file>
+            <file>file:/C:/Users/nhlan/OneDrive/Documents/GitHub/39_ContactMangamentSystem/src/persistance/PersistanceException.java</file>
         </group>
     </open-files>
 </project-private>

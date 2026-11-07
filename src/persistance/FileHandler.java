@@ -1,4 +1,3 @@
-
 package persistance;
 import model.Contact;
 

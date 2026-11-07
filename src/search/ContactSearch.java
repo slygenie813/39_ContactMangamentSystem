@@ -1,5 +1,3 @@
-
-
 package search;
 
 import model.Contact;
@@ -165,5 +163,22 @@ public class ContactSearch
 
         return results;
     } 
+    
+    public static List<Contact> search( List<Contact> contacts, String query ){
+        return search( contacts, query, true );
+    }
+    public static List<Contact> search( List<Contact> contacts, String query, boolean ignoreCase ){
+        List<Contact> results = new ArrayList<>();
+        if ( contacts == null ) return results;
+        if ( query == null || query.trim().isEmpty() ) { results.addAll( contacts ); return results; }
+        String key = ignoreCase ? query.toLowerCase().trim() : query.trim();
+        for ( Contact c : contacts ){
+            String name = ignoreCase ? c.getName().toLowerCase() : c.getName();
+            String email = ignoreCase ? c.getEmail().toLowerCase() : c.getEmail();
+            if ( name.contains( key ) || c.getPhone().contains( key ) || email.contains( key ) )
+                results.add( c );
+        }
+        return results;
+    }
 
 } 

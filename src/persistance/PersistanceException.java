@@ -1,5 +1,6 @@
-
 package persistance;
+
+
 public class PersistanceException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
