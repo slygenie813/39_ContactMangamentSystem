@@ -35,7 +35,7 @@ class FileHandlerTest {
         }
     }
 
-    // ---------- normal cases ----------
+    // normal cases 
 
     @Test
     void saveThenLoadGivesSameContacts() {

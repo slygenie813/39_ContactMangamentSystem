@@ -257,21 +257,21 @@ public class ContactManager {
                 removed.getName() + " (" + removed.getPhone() + ")");
     }
 
-    // --------------------------------------------------
+   
     // Reading and searching (these return copies, so callers can sort
     // or filter the result without touching the manager's own list)
-    // --------------------------------------------------
+    
 
     public synchronized List<Contact> viewAllContacts() {
         return new ArrayList<>(contacts);
     }
 
-    /** All contacts, sorted A-Z by name. */
+    // All contacts, sorted A-Z by name. 
     public synchronized List<Contact> viewAllContactsSorted() {
         return viewAllContactsSorted(Contact.BY_NAME);
     }
 
-    /** All contacts in the given order, e.g. Contact.BY_DATE_ADDED. */
+    // All contacts in the given order, e.g. Contact.BY_DATE_ADDED. 
     public synchronized List<Contact> viewAllContactsSorted(
             Comparator<Contact> order) {
         List<Contact> copy = new ArrayList<>(contacts);
@@ -279,22 +279,22 @@ public class ContactManager {
         return copy;
     }
 
-    /** Contacts whose name, phone or email contains the query. */
+    // Contacts whose name, phone or email contains the query. 
     public synchronized List<Contact> search(String query) {
         return ContactSearch.search(contacts, query);
     }
 
-    /** Same, with a choice of ignoring upper/lower case. */
+    // Same, with a choice of ignoring upper/lower case. 
     public synchronized List<Contact> search(String query, boolean ignoreCase) {
         return ContactSearch.search(contacts, query, ignoreCase);
     }
 
-    /** Exact phone lookup (O(1)); returns null when there is no match. */
+    // Exact phone lookup (O(1)); returns null when there is no match. 
     public synchronized Contact findByPhone(String phone) {
         return phoneIndex.findByExactPhone(phone);
     }
 
-    /** Returns the contact with this id, or null. */
+    // Returns the contact with this id, or null. 
     public synchronized Contact findById(String id) {
         int index = indexOfId(id);
         return index < 0 ? null : contacts.get(index);
@@ -304,9 +304,9 @@ public class ContactManager {
         return contacts.size();
     }
 
-    // --------------------------------------------------
+    
     // Helpers
-    // --------------------------------------------------
+    
 
     private void checkPhoneIsFree(Contact candidate, String ignoreId)
             throws DuplicateContactException {

@@ -20,7 +20,7 @@ class ContactSearchTest {
         return l;
     }
 
-    // ---------- linear search ----------
+    // linear search 
 
     @Test
     void linearSearchFindsExactNameIgnoringCase() {
@@ -35,7 +35,7 @@ class ContactSearchTest {
         assertEquals(-1, ContactSearch.linearSearchByName(new ArrayList<>(), "Jane Doe"));
     }
 
-    // ---------- recursive linear search ----------
+    //  recursive linear search 
 
     @Test
     void recursiveSearchGivesSameAnswerAsLinear() {
@@ -54,7 +54,7 @@ class ContactSearchTest {
         assertEquals(3, ContactSearch.recursiveLinearSearchByName(sample(), "JANE DOE", 0));
     }
 
-    // ---------- binary search ----------
+    // binary search 
 
     @Test
     void binarySearchFindsEveryNameInASortedList() {
@@ -80,7 +80,7 @@ class ContactSearchTest {
         assertEquals(0, ContactSearch.binarySearchByName(single, "only one"));
     }
 
-    // ---------- substring searches ----------
+    // substring searches 
 
     @Test
     void searchByNamePartialAndKeepsOrder() {
@@ -113,7 +113,7 @@ class ContactSearchTest {
         assertEquals(0, ContactSearch.searchByEmail(sample(), "EXAMPLE.COM", false).size());
     }
 
-    // ---------- combined search ----------
+    // combined search 
 
     @Test
     void combinedSearchMatchesNamePhoneOrEmail() {
