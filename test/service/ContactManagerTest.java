@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import persistance.ActivityLog;
 import persistance.ContactRepository;
-import persistance.PersistenceException;
+import persistance.PersistanceException;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,13 +24,13 @@ class ContactManagerTest {
 
         @Override
         public List<Contact> load() {
-            if (failLoad) throw new PersistenceException("load failed");
+            if (failLoad) throw new PersistanceException("load failed");
             return new ArrayList<>(data);
         }
 
         @Override
         public void save(List<Contact> contacts) {
-            if (failSaves) throw new PersistenceException("disk full");
+            if (failSaves) throw new PersistanceException("disk full");
             data = new ArrayList<>(contacts);
             saves++;
         }
@@ -80,7 +80,7 @@ class ContactManagerTest {
     void startupFailsIfStoredDataUnreadable() {
         MemoryRepo repo = new MemoryRepo();
         repo.failLoad = true;
-        assertThrows(PersistenceException.class, () -> newManager(repo));
+        assertThrows(PersistanceException.class, () -> newManager(repo));
     }
 
     @Test
@@ -239,7 +239,7 @@ class ContactManagerTest {
         repo.failSaves = true;
         ContactManager m = newManager(repo);
 
-        assertThrows(PersistenceException.class,
+        assertThrows(PersistanceException.class,
                 () -> m.addContact("Alice", "0712345678", "alice@example.com"));
         assertEquals(0, m.count());
         assertNull(m.findByPhone("0712345678"));
@@ -253,7 +253,7 @@ class ContactManagerTest {
         String id = m.findByPhone("0712345678").getId();
 
         repo.failSaves = true;
-        assertThrows(PersistenceException.class,
+        assertThrows(PersistanceException.class,
                 () -> m.updateContact(id, "Changed", "0712345678", "alice@example.com"));
         assertEquals("Alice", m.findById(id).getName());
     }
@@ -266,7 +266,7 @@ class ContactManagerTest {
         String id = m.findByPhone("0712345678").getId();
 
         repo.failSaves = true;
-        assertThrows(PersistenceException.class, () -> m.deleteContactById(id));
+        assertThrows(PersistanceException.class, () -> m.deleteContactById(id));
         assertEquals(1, m.count());
         assertNotNull(m.findById(id));
     }

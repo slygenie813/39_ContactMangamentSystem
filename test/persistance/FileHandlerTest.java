@@ -103,7 +103,7 @@ class FileHandlerTest {
         byte[] junk = "this is definitely not a serialized list".getBytes();
         Files.write(file, junk);
 
-        assertThrows(PersistenceException.class, () -> FileHandler.loadContacts(file));
+        assertThrows(PersistanceException.class, () -> FileHandler.loadContacts(file));
         assertArrayEquals(junk, Files.readAllBytes(file));      // nothing overwritten
     }
 
@@ -114,7 +114,7 @@ class FileHandlerTest {
         byte[] bytes = Files.readAllBytes(file);
         Files.write(file, Arrays.copyOf(bytes, bytes.length / 2));
 
-        assertThrows(PersistenceException.class, () -> FileHandler.loadContacts(file));
+        assertThrows(PersistanceException.class, () -> FileHandler.loadContacts(file));
     }
 
     @Test
@@ -124,7 +124,7 @@ class FileHandlerTest {
         notContacts.add("hello");
         writeObject(file, notContacts);
 
-        assertThrows(PersistenceException.class, () -> FileHandler.loadContacts(file));
+        assertThrows(PersistanceException.class, () -> FileHandler.loadContacts(file));
     }
 
     @Test
@@ -132,7 +132,7 @@ class FileHandlerTest {
         Path file = dir.resolve("hostile.dat");
         writeObject(file, new HashMap<String, String>());
 
-        assertThrows(PersistenceException.class, () -> FileHandler.loadContacts(file));
+        assertThrows(PersistanceException.class, () -> FileHandler.loadContacts(file));
     }
 
     //  I/O errors 
@@ -140,7 +140,7 @@ class FileHandlerTest {
     @Test
     void savingToAMissingFolderFails() {
         Path file = dir.resolve("no").resolve("such").resolve("folder").resolve("contacts.dat");
-        assertThrows(PersistenceException.class, () -> FileHandler.saveContacts(sample(), file));
+        assertThrows(PersistanceException.class, () -> FileHandler.saveContacts(sample(), file));
     }
 
     //  text lines (used by the accounts file) 
