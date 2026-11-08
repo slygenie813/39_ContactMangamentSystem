@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ContactManagerTest {
 
-    /** In-memory storage so tests never touch contacts.dat. */
+    // In-memory storage so tests never touch contacts.dat. 
     static class MemoryRepo implements ContactRepository {
         List<Contact> data = new ArrayList<>();
         boolean failSaves = false;
